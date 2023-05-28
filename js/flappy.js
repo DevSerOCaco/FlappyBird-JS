@@ -55,20 +55,19 @@ function Barreiras(altura, largura, abertura, espaco, notificaPonto) {
 
     const deslocamento = 3;
 
-    this.animar = () =>{
+    this.animar = () => {
         this.pares.forEach(par => {
-            par.setX(par.getX() - deslocamento)
-
-            if(par.getX() < par.getLargura()-200){
+            par.setX(par.getX() - deslocamento);
+    
+            if (par.getX() < par.getLargura() - 200) {
                 par.setX(par.getX() + espaco * this.pares.length);
                 par.sortearAbertura();
             }
-
-            const meio = largura /2;
-            const cruzouOMeio = par.getX + deslocamento >= meio && par.getX < meio;
-                if(cruzouOMeio) notificaPonto;
-
-        })
+    
+            const meio = largura / 2;
+            const cruzouOMeio = par.getX() + deslocamento >= meio && par.getX() < meio;
+            if (cruzouOMeio) notificaPonto();
+        });
     }
 
 }
@@ -123,16 +122,16 @@ function estaoSobrePostos(elementoA, elementoB) {
 function colidiu(passaro, barreiras) {
     let colidiu = false;
 
-    barreiras.pares.forEach ( ParDeBarreiras => {
+    barreiras.pares.forEach(ParDeBarreiras => {
         const superior = ParDeBarreiras.superior.elemento;
         const inferior = ParDeBarreiras.inferior.elemento;
 
-        colidiu = estaoSobrePostos(passaro.elemento, superior) 
-        || estaoSobrePostos(passaro.elemento, inferior)
+        if (!colidiu && (estaoSobrePostos(passaro.elemento, superior) || estaoSobrePostos(passaro.elemento, inferior))) {
+            colidiu = true;
+        }
+    });
 
-    })
-    return colidiu
-
+    return colidiu;
 }
 
 function FlappyBird() {
@@ -143,7 +142,7 @@ function FlappyBird() {
     const largura = areaDoJogo.clientWidth;
 
     const progresso = new Progresso();
-    const barreiras = new Barreiras(altura, largura, 400, 400, 
+    const barreiras = new Barreiras(altura, largura, 3gi00, 400, 
         () => progresso.atualizarPontos(++pontos))
 
     const passaro = new Passaro(altura); 
